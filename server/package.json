@@ -4,7 +4,8 @@
   "description": "Backend API for social media management platform",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node production.js",
+    "start:dev": "node index.js",
     "dev": "nodemon index.js"
   },
   "dependencies": {

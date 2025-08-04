@@ -17,6 +17,7 @@ import {
   CheckCircle,
   XCircle
 } from 'lucide-react';
+import { API_BASE_URL } from '../config/api';
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
@@ -34,7 +35,7 @@ const Posts = () => {
   const fetchPosts = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/posts', {
+      const response = await axios.get(`${API_BASE_URL}/api/posts`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPosts(response.data);
@@ -48,7 +49,7 @@ const Posts = () => {
   const handleDeletePost = async (postId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
+      await axios.delete(`${API_BASE_URL}/api/posts/${postId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPosts(posts.filter(post => post.id !== postId));
@@ -62,7 +63,7 @@ const Posts = () => {
   const handlePublishPost = async (postId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/posts/${postId}/publish`, {}, {
+      await axios.post(`${API_BASE_URL}/api/posts/${postId}/publish`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchPosts(); // Refresh posts

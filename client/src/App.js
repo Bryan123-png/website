@@ -8,6 +8,7 @@ import Posts from './pages/Posts';
 import Schedule from './pages/Schedule';
 import Analytics from './pages/Analytics';
 import Platforms from './pages/Platforms';
+import Settings from './pages/Settings';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import './App.css';
@@ -51,6 +52,7 @@ function AppContent() {
               <Route path="/schedule" element={<Schedule />} />
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/platforms" element={<Platforms />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
           </main>

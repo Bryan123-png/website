@@ -13,6 +13,7 @@ import {
   AlertCircle,
   CheckCircle
 } from 'lucide-react';
+import { API_BASE_URL } from '../config/api';
 
 const Schedule = () => {
   const [scheduledPosts, setScheduledPosts] = useState([]);
@@ -29,7 +30,7 @@ const Schedule = () => {
   const fetchScheduledPosts = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/schedule', {
+      const response = await axios.get(`${API_BASE_URL}/api/schedule`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setScheduledPosts(response.data);
@@ -43,7 +44,7 @@ const Schedule = () => {
   const handleCancelPost = async (postId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/schedule/${postId}`, {
+      await axios.delete(`${API_BASE_URL}/api/schedule/${postId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setScheduledPosts(scheduledPosts.filter(post => post.id !== postId));

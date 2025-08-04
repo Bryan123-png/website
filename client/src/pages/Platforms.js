@@ -14,13 +14,15 @@ import {
   BarChart3,
   Zap
 } from 'lucide-react';
+import { API_BASE_URL } from '../config/api';
 
 const Platforms = () => {
   const [platforms, setPlatforms] = useState([]);
   const [connectedPlatforms, setConnectedPlatforms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showConnectModal, setShowConnectModal] = useState(false);
-  const [selectedPlatform, setSelectedPlatform] = useState(null);
+  const [showPlatformSettings, setShowPlatformSettings] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState(null);
 
   useEffect(() => {
     fetchPlatforms();
@@ -30,7 +32,7 @@ const Platforms = () => {
   const fetchPlatforms = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/platforms', {
+      const response = await axios.get(`${API_BASE_URL}/api/platforms`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPlatforms(response.data);
@@ -42,7 +44,7 @@ const Platforms = () => {
   const fetchConnectedPlatforms = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/platforms/connected', {
+      const response = await axios.get(`${API_BASE_URL}/api/platforms/connected`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setConnectedPlatforms(response.data);
@@ -56,7 +58,7 @@ const Platforms = () => {
   const handleConnect = async (platformId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/platforms/connect`, 
+      await axios.post(`${API_BASE_URL}/api/platforms/connect`, 
         { platformId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -70,7 +72,7 @@ const Platforms = () => {
   const handleDisconnect = async (accountId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/platforms/disconnect/${accountId}`, {
+      await axios.delete(`${API_BASE_URL}/api/platforms/disconnect/${accountId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setConnectedPlatforms(connectedPlatforms.filter(p => p.id !== accountId));
@@ -82,7 +84,7 @@ const Platforms = () => {
   const handleSync = async (accountId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/platforms/sync/${accountId}`, {}, {
+      await axios.post(`${API_BASE_URL}/api/platforms/sync/${accountId}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchConnectedPlatforms();
@@ -197,6 +199,10 @@ const Platforms = () => {
                       <RefreshCw className="h-4 w-4" />
                     </button>
                     <button
+                      onClick={() => {
+                        setSelectedAccount(account);
+                        setShowPlatformSettings(true);
+                      }}
                       className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
                       title="Settings"
                     >
@@ -377,6 +383,84 @@ const Platforms = () => {
                   className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
                 >
                   Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Platform Settings Modal */}
+      {showPlatformSettings && selectedAccount && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                {selectedAccount.platform} Settings
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Account Status
+                  </label>
+                  <select 
+                    defaultValue={selectedAccount.status}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="active">Active</option>
+                    <option value="paused">Paused</option>
+                    <option value="error">Error</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Auto-sync Data
+                  </label>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" defaultChecked className="sr-only peer" />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Post Notifications
+                  </label>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" defaultChecked className="sr-only peer" />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Default Posting Time
+                  </label>
+                  <input 
+                    type="time" 
+                    defaultValue="09:00"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+              </div>
+              
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowPlatformSettings(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    // Here you would save the platform settings
+                    alert('Platform settings saved!');
+                    setShowPlatformSettings(false);
+                  }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Save Settings
                 </button>
               </div>
             </div>

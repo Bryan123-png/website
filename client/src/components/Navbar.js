@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { Bell, Search, Settings, User, LogOut, ChevronDown } from 'lucide-react';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
 
@@ -120,7 +122,10 @@ const Navbar = () => {
             </div>
 
             {/* Settings */}
-            <button className="p-2 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full">
+            <button 
+              onClick={() => navigate('/settings')}
+              className="p-2 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full"
+            >
               <Settings className="h-6 w-6" />
             </button>
 
@@ -145,11 +150,23 @@ const Navbar = () => {
                       <p className="font-medium">{user?.name}</p>
                       <p className="text-gray-500">{user?.email}</p>
                     </div>
-                    <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <button 
+                      onClick={() => {
+                        navigate('/settings');
+                        setShowUserMenu(false);
+                      }}
+                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
                       <User className="h-4 w-4 mr-2" />
                       Profile Settings
                     </button>
-                    <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <button 
+                      onClick={() => {
+                        navigate('/settings');
+                        setShowUserMenu(false);
+                      }}
+                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
                       <Settings className="h-4 w-4 mr-2" />
                       Account Settings
                     </button>
