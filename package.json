@@ -1,0 +1,19 @@
+{
+  "name": "social-media-manager",
+  "version": "1.0.0",
+  "description": "A comprehensive social media management platform",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install"
+  },
+  "keywords": ["social media", "management", "scheduling", "analytics"],
+  "author": "Social Media Manager",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
